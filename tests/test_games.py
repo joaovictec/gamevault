@@ -87,3 +87,89 @@ def test_filter_games_by_max_price():
 
     for game in data:
         assert game["purchase_price"] <= 200
+
+
+def test_update_game():
+    create_response = client.post(
+        "/games/",
+        json={
+            "name": "Resident Evil 4",
+            "platform": "PS2",
+            "purchase_price": 50,
+            "sale_price": 100
+        }
+    )
+
+    game_id = create_response.json()["id"]
+
+    response = client.put(
+        f"/games/{game_id}",
+        json={
+            "sale_price": 130
+        }
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["id"] == game_id
+    assert data["name"] == "Resident Evil 4"
+    assert data["purchase_price"] == 50
+    assert data["sale_price"] == 130
+
+
+def test_sell_game():
+    create_response = client.post(
+        "/games/",
+        json={
+            "name": "Gran Turismo 4",
+            "platform": "PS2",
+            "purchase_price": 30,
+            "sale_price": 80
+        }
+    )
+
+    assert create_response.status_code == 201
+
+    game_id = create_response.json()["id"]
+
+    response = client.post(
+        f"/games/{game_id}/sell"
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["id"] == game_id
+    assert data["status"] == "sold"
+
+
+def test_sell_game_twice():
+    create_response = client.post(
+        "/games/",
+        json={
+            "name": "God of War II",
+            "platform": "PS2",
+            "purchase_price": 40,
+            "sale_price": 90
+        }
+    )
+
+    assert create_response.status_code == 201
+
+    game_id = create_response.json()["id"]
+
+    first_sale = client.post(
+        f"/games/{game_id}/sell"
+    )
+
+    assert first_sale.status_code == 200
+
+    second_sale = client.post(
+        f"/games/{game_id}/sell"
+    )
+
+    assert second_sale.status_code == 400
+    assert second_sale.json()["detail"] == "Game already sold"

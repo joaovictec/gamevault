@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.game import Game
-from app.schemas.game import GameCreate
+from app.schemas.game import GameCreate, GameUpdate
 
 
 def create_game(db: Session, game_data: GameCreate):
@@ -48,6 +48,23 @@ def get_game(db: Session, game_id: int):
     return db.query(Game).filter(Game.id == game_id).first()
 
 
+def update_game(db: Session, game_id: int, game_data: GameUpdate):
+    game = get_game(db, game_id)
+
+    if not game:
+        return None
+
+    update_data = game_data.model_dump(exclude_unset=True)
+
+    for field, value in update_data.items():
+        setattr(game, field, value)
+
+    db.commit()
+    db.refresh(game)
+
+    return game
+
+
 def delete_game(db: Session, game_id: int):
     game = get_game(db, game_id)
 
@@ -92,3 +109,17 @@ def get_dashboard(db: Session):
         "potential_profit": potential_profit,
         "sold_items": sold_items
     }
+def sell_game(db: Session, game_id: int):
+    game = get_game(db, game_id)
+
+    if not game:
+        return None
+    if game.status == "sold":
+        return False
+
+    game.status = "sold"
+
+    db.commit()
+    db.refresh(game)
+
+    return game
