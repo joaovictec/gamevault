@@ -20,8 +20,28 @@ def create_game(db: Session, game_data: GameCreate):
     return game
 
 
-def get_games(db: Session):
-    return db.query(Game).all()
+def get_games(
+    db: Session,
+    platform=None,
+    status=None,
+    min_price=None,
+    max_price=None,
+):
+    query = db.query(Game)
+
+    if platform:
+        query = query.filter(Game.platform == platform)
+
+    if status:
+        query = query.filter(Game.status == status)
+
+    if min_price is not None:
+        query = query.filter(Game.purchase_price >= min_price)
+
+    if max_price is not None:
+        query = query.filter(Game.purchase_price <= max_price)
+
+    return query.all()
 
 
 def get_game(db: Session, game_id: int):
