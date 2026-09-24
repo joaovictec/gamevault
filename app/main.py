@@ -16,7 +16,7 @@ app.include_router(games_router)
 @app.get("/")
 def root():
     return{
-        "name": "GameVoult API",
+        "name": "GameVault API",
         "version": "1.0.0",
         "status":"online"
     }
