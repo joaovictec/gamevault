@@ -29,6 +29,7 @@ O **GameVault API** foi desenvolvido com o propósito de demonstrar boas prátic
 
 ---
 
+
 ## ⚙️ Tecnologias Utilizadas
 
 - **Linguagem:** Python 3.12+
@@ -64,6 +65,8 @@ O **GameVault API** foi desenvolvido com o propósito de demonstrar boas prátic
 | `DELETE` | `/games/{id}` | Remover jogo do banco de dados | `200` |
 | `POST` | `/games/{id}/sell` | Registrar venda de um jogo | `200` |
 | `GET` | `/games/dashboard/summary` | Obter resumo estatístico do estoque | `200` |
+<img width="598" height="282" alt="Captura de tela 2026-09-24 115808" src="https://github.com/user-attachments/assets/4bdf1622-7d6c-40f2-bd88-7bb8a441d7bc" />
+<img width="598" height="282" alt="Captura de tela 2026-09-24 115757" src="https://github.com/user-attachments/assets/77be1039-436b-4e66-a11a-d95a8f3c4df6" />
 
 ### 🔍 Filtros de Busca
 
