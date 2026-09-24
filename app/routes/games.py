@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from typing import Optional
 from app.database import get_db
 from app.schemas.game import GameCreate, GameResponse
 from app.services.game_service import (
@@ -23,9 +23,20 @@ def create(game: GameCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=list[GameResponse])
-def list_games(db: Session = Depends(get_db)):
-    return get_games(db)
-
+def list_games(
+    platform: Optional[str] = None,
+    status: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
+    db: Session = Depends(get_db),
+):
+    return get_games(
+        db,
+        platform=platform,
+        status=status,
+        min_price=min_price,
+        max_price=max_price,
+    )
 
 @router.get("/dashboard/summary")
 def dashboard(db: Session = Depends(get_db)):

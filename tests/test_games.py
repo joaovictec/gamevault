@@ -54,3 +54,36 @@ def test_dashboard():
     assert "potential_revenue" in data
     assert "potential_profit" in data
     assert "sold_items" in data
+
+
+def test_filter_games_by_platform():
+    response = client.get("/games/?platform=PS5")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    for game in data:
+        assert game["platform"] == "PS5"
+
+
+def test_filter_games_by_min_price():
+    response = client.get("/games/?min_price=100")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    for game in data:
+        assert game["purchase_price"] >= 100
+
+
+def test_filter_games_by_max_price():
+    response = client.get("/games/?max_price=200")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    for game in data:
+        assert game["purchase_price"] <= 200
